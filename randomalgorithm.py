@@ -257,23 +257,6 @@ def pathfinding():
     except UnboundLocalError:        
         return direcao[0]
 
-PARAR = 0 
-def preso():
-    global PARAR
-    
-    ultima_posX = posicaoX
-    ultima_posY = posicaoY
-
-    time.sleep(0.5)
-    if update == True:
-        if ultima_posX == posicaoX:
-            if ultima_posY == posicaoY:
-                print("Não existe Saída ou algo deu errado!")
-                PARAR = 1
-                return 1
-            
-
-
 
 def jogar():
     
@@ -296,10 +279,6 @@ def jogar():
         print("Passos (teclas apertadas): ", passos)
         
         
-
-        if PARAR == 1:
-            break
-        
         time.sleep(0.1)
         tempo += 0.1
         Historico.append(direcao)
@@ -313,7 +292,6 @@ update = False
 if update == False:
     
     jogar()
-    th.Thread(target=preso).start()
     
     print("Tempo: ", tempo)
     print("Caminho usado:")
