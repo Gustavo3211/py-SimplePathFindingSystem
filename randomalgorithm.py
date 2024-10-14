@@ -92,70 +92,39 @@ passos = 0
 def andar(direcao, posicaoX, posicaoY):
     global pontoES, pontoDIR, pontoBAI, pontoCIM
 
-    if direcao in ["NaoAchei"]:
-
-        #apaga o caminho feito pelo player
+    if direcao == "NaoAchei":
+        # Apaga o caminho feito pelo player
         for y in range(len(Mapa)):
             for x in range(len(Mapa[y])):
-                if Mapa[y][x] == "0":
+                if Mapa[y][x] != "█" and Mapa[y][x] != "X":
                     Mapa[y][x] = "."
-        #guarda o local aonde o player travou
-        travouX = posicaoX
-        travouY = posicaoY
-        #faz o local intransitavel
-        Mapa[travouY][travouX] = "X"
-        #limpa o historico de teclas
+        
+        # Guarda o local onde o player travou e torna intransitável
+        Mapa[posicaoY][posicaoX] = "X"
+
+        # Limpa o histórico e reinicia o player
         Historico.clear()
-
-        #renicia o player
         posicaoX, posicaoY = adicionarPlayer()
+
     else:
-        direcao = direcao.split(",")
-        print(direcao)
+        movimentos = {
+            "D": (1, 0, ">"), 
+            "A": (-1, 0, "<"), 
+            "S": (0, 1, "V"), 
+            "W": (0, -1, "^")}
 
-        for i, direcao in enumerate(direcao):
-
-            if direcao in ["D", "d"] and posicaoX < 5:
-                if Mapa[posicaoY][posicaoX + 1] == "@": 
-                    return posicaoX, posicaoY, False
-                if Mapa[posicaoY][posicaoX + 1] == "." or Mapa[posicaoY][posicaoX + 1] == "0":    
-
-                    Mapa[posicaoY][posicaoX] = "0"
-                    posicaoX += 1
-                    Mapa[posicaoY][posicaoX] = 1
-
-            if direcao in ["A", "a"] and posicaoX > 0:
-                if Mapa[posicaoY][posicaoX - 1] == "@":
-                    return posicaoX, posicaoY, False
-                if Mapa[posicaoY][posicaoX - 1] == "." or Mapa[posicaoY][posicaoX - 1] == "0":
-
-                    Mapa[posicaoY][posicaoX] = "0"
-                    posicaoX -= 1
-                    Mapa[posicaoY][posicaoX] = 1
-
-            if direcao in ["S", "s"] and posicaoY < 5:
-                if Mapa[posicaoY + 1][posicaoX] == "@":
-                    return posicaoX, posicaoY, False
-                if Mapa[posicaoY + 1][posicaoX] == "." or Mapa[posicaoY + 1][posicaoX] == "0": 
-
-                    Mapa[posicaoY][posicaoX] = "0"
-                    posicaoY += 1
-                    Mapa[posicaoY][posicaoX] = 1  
-
-            if direcao in ["W", "w"] and posicaoY > 0:
-                if Mapa[posicaoY - 1][posicaoX] == "@":
-                    return posicaoX, posicaoY, False
-                if Mapa[posicaoY - 1][posicaoX] == "." or Mapa[posicaoY - 1][posicaoX] == "0":
-
-                    Mapa[posicaoY][posicaoX] = "0"
-                    posicaoY -= 1
-                    Mapa[posicaoY][posicaoX] = 1
-
-
-
-
-
-    
+        for mov in direcao.split(","):
+            mov = mov.upper()
+            if mov in movimentos:
+                dx, dy,Caminho = movimentos[mov]
+                novoX, novoY = posicaoX + dx, posicaoY + dy
+                if 0 <= novoX < len(Mapa[0]) and 0 <= novoY < len(Mapa):
+                    if Mapa[novoY][novoX] == "@":
+                        return posicaoX, posicaoY, False
+                    if Mapa[novoY][novoX] in ["."]:
+                        Mapa[posicaoY][posicaoX] = Caminho
+                        posicaoX, posicaoY = novoX, novoY
+                        Mapa[posicaoY][posicaoX] = 1
 
     return posicaoX, posicaoY, True
 
